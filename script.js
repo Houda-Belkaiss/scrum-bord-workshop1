@@ -57,7 +57,13 @@ listeCollaborators.appendChild(button);
  * - Mettre à jour le select avec innerHTML
  */
 function updateAssigneeSelect() {
-  
+   const assigneeStory = document.getElementById('storyAssignee');
+   assigneeStory.innerHTML = "";
+   collaborators.forEach(function (element) {
+      let option = document.createElement('option');
+      option.innerHTML = `<option value="${element}">${element}</option>`;
+      assigneeStory.appendChild(option);
+   })
 }
 
 /**
