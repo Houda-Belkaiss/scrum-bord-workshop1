@@ -77,7 +77,28 @@ function updateAssigneeSelect() {
  * - Appeler renderSprintBacklog() pour actualiser l'affichage
  */
 function addUserStory() {
-    // À IMPLÉMENTER
+    const titreDeStory = document.getElementById('storyTitle');
+    const descriptionStory = document.getElementById('storyDescription');
+    const sprintStory = document.getElementById('storySprint');
+    const assigneeStory = document.getElementById('storyAssignee');
+    if (!titreDeStory.value && !descriptionStory.value) {
+        alert('Ecrire le titre et la description');
+        return;
+    }
+    let collaborateurObjet = {
+        id :storyIdCounter,
+        title : titreDeStory.value,
+        description : descriptionStory.value,
+        sprint: sprintStory.value,
+        assignee : assigneeStory.value,
+        status: 'backlog'
+    }
+    storyIdCounter++;
+    console.log(collaborateurObjet);
+    titreDeStory.value ="";
+    descriptionStory.value = "";
+    renderSprintBacklog();
+    
 }
 
 /**
@@ -92,7 +113,7 @@ function addUserStory() {
  * - Injecter tout le HTML généré dans le conteneur
  */
 function renderSprintBacklog() {
-    // À IMPLÉMENTER
+    
 }
 
 /**
