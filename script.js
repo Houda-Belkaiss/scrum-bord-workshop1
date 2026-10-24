@@ -14,7 +14,20 @@ let storyIdCounter = 1;
  * - Appeler updateAssigneeSelect() pour mettre à jour le select d'assignation
  */
 function addCollaborator() {
-    // À IMPLÉMENTER
+ const  collaboratorInput = document.getElementById('collaboratorName');
+  let inputValue = collaboratorInput.value;
+  if (!inputValue) {
+    alert('Ecrire le nom de collaborator!!');
+    return;
+  }else if (collaborators.includes(inputValue)) {
+    alert('le nom est deja existe');
+    return;
+  }
+ collaborators.push(inputValue);
+  collaboratorInput.value = "";
+  updateCollaboratorsList();
+  updateAssigneeSelect();
+    
 }
 
 /**
@@ -26,7 +39,7 @@ function addCollaborator() {
  * - Injecter le HTML dans l'élément avec innerHTML
  */
 function updateCollaboratorsList() {
-    // À IMPLÉMENTER
+   
 }
 
 /**
@@ -37,7 +50,7 @@ function updateCollaboratorsList() {
  * - Mettre à jour le select avec innerHTML
  */
 function updateAssigneeSelect() {
-    // À IMPLÉMENTER
+  
 }
 
 /**
