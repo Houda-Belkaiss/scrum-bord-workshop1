@@ -39,6 +39,13 @@ function addCollaborator() {
  * - Injecter le HTML dans l'élément avec innerHTML
  */
 function updateCollaboratorsList() {
+    const listeCollaborators = document.getElementById('collaboratorsList');
+listeCollaborators.innerHTML="";
+collaborators.forEach(function (item) {
+let button = document.createElement('button');
+button.innerHTML = item;
+listeCollaborators.appendChild(button);
+})
    
 }
 
