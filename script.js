@@ -186,8 +186,22 @@ function renderSprintBacklog() {
  * - Appeler renderSprintBacklog() et renderBoard() pour mettre à jour l'affichage
  */
 function startSprint(sprintNum) {
-  // À IMPLÉMENTER
-}
+    const story = userStories.filter(function (item) {
+        return item.status == 'backlog' && item.sprint == sprintNum;   
+    })
+   
+    const newUserStories = userStories.filter(function (item) {
+        return item.status != 'backlog' || item.sprint != sprintNum;   
+    })
+     userStories = newUserStories;
+      story.forEach(function (element) {
+        element.status = 'todo';
+        boardStories.push(element);
+        
+    })
+    renderSprintBacklog();
+    renderBoard();
+    }
 
 /**
  * Fonction pour afficher toutes les cartes sur le SCRUM Board
