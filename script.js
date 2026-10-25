@@ -312,9 +312,12 @@ function getPrevStatus(current) {
  * - Appeler renderBoard() pour actualiser l'affichage
  */
 function moveCard(id, newStatus) {
-  // À IMPLÉMENTER
+ const story = boardStories.find(function (element) {
+    return element.id === id;
+ })
+  story.status = newStatus;
+  renderBoard();
 }
-
 /**
  * Fonction pour supprimer une carte du board
  * TODO:
@@ -322,7 +325,7 @@ function moveCard(id, newStatus) {
  * - Appeler renderBoard() pour actualiser l'affichage
  */
 function deleteCard(id) {
-  // À IMPLÉMENTER
+  
 }
 
 // Initialisation
