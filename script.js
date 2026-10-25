@@ -296,7 +296,12 @@ function getNextStatus(current) {
  * - Retourner le status précédent selon le status actuel
  */
 function getPrevStatus(current) {
-  // À IMPLÉMENTER
+  const transitions = {
+    "in-progress" : "todo",
+    "testing" : "in-progress",
+    "done" : "testing"
+  }
+  return transitions[current]
 }
 
 /**
