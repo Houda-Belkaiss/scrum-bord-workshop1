@@ -5,7 +5,7 @@ let storyIdCounter = 1;
 
 /**
  * Fonction pour ajouter un nouveau collaborateur à l'équipe
- * TODO: 
+ * TODO:
  * - Récupérer la valeur du champ input avec l'id 'collaboratorName'
  * - Vérifier que le nom n'est pas vide et n'existe pas déjà dans le tableau 'collaborators'
  * - Ajouter le collaborateur au tableau 'collaborators'
@@ -14,20 +14,19 @@ let storyIdCounter = 1;
  * - Appeler updateAssigneeSelect() pour mettre à jour le select d'assignation
  */
 function addCollaborator() {
- const  collaboratorInput = document.getElementById('collaboratorName');
+  const collaboratorInput = document.getElementById("collaboratorName");
   let inputValue = collaboratorInput.value;
   if (!inputValue) {
-    alert('Ecrire le nom de collaborator!!');
+    alert("Ecrire le nom de collaborator!!");
     return;
-  }else if (collaborators.includes(inputValue)) {
-    alert('le nom est deja existe');
+  } else if (collaborators.includes(inputValue)) {
+    alert("le nom est deja existe");
     return;
   }
- collaborators.push(inputValue);
+  collaborators.push(inputValue);
   collaboratorInput.value = "";
   updateCollaboratorsList();
   updateAssigneeSelect();
-    
 }
 
 /**
@@ -39,14 +38,13 @@ function addCollaborator() {
  * - Injecter le HTML dans l'élément avec innerHTML
  */
 function updateCollaboratorsList() {
-    const listeCollaborators = document.getElementById('collaboratorsList');
-listeCollaborators.innerHTML="";
-collaborators.forEach(function (item) {
-let button = document.createElement('button');
-button.innerHTML = item;
-listeCollaborators.appendChild(button);
-})
-   
+  const listeCollaborators = document.getElementById("collaboratorsList");
+  listeCollaborators.innerHTML = "";
+  collaborators.forEach(function (item) {
+    let button = document.createElement("button");
+    button.innerHTML = item;
+    listeCollaborators.appendChild(button);
+  });
 }
 
 /**
@@ -57,13 +55,13 @@ listeCollaborators.appendChild(button);
  * - Mettre à jour le select avec innerHTML
  */
 function updateAssigneeSelect() {
-   const assigneeStory = document.getElementById('storyAssignee');
-   assigneeStory.innerHTML = "";
-   collaborators.forEach(function (element) {
-      let option = document.createElement('option');
-      option.innerHTML = `<option value="${element}">${element}</option>`;
-      assigneeStory.appendChild(option);
-   })
+  const assigneeStory = document.getElementById("storyAssignee");
+  assigneeStory.innerHTML = "";
+  collaborators.forEach(function (element) {
+    let option = document.createElement("option");
+    option.innerHTML = `${element}`;
+    assigneeStory.appendChild(option);
+  });
 }
 
 /**
@@ -77,28 +75,28 @@ function updateAssigneeSelect() {
  * - Appeler renderSprintBacklog() pour actualiser l'affichage
  */
 function addUserStory() {
-    const titreDeStory = document.getElementById('storyTitle');
-    const descriptionStory = document.getElementById('storyDescription');
-    const sprintStory = document.getElementById('storySprint');
-    const assigneeStory = document.getElementById('storyAssignee');
-    if (!titreDeStory.value && !descriptionStory.value) {
-        alert('Ecrire le titre et la description');
-        return;
-    }
-    let collaborateurObjet = {
-        id :storyIdCounter,
-        title : titreDeStory.value,
-        description : descriptionStory.value,
-        sprint: sprintStory.value,
-        assignee : assigneeStory.value,
-        status: 'backlog'
-    }
-    storyIdCounter++;
-    console.log(collaborateurObjet);
-    titreDeStory.value ="";
-    descriptionStory.value = "";
-    renderSprintBacklog();
-    
+  const titreDeStory = document.getElementById("storyTitle");
+  const descriptionStory = document.getElementById("storyDescription");
+  const sprintStory = document.getElementById("storySprint");
+  const assigneeStory = document.getElementById("storyAssignee");
+  if (!titreDeStory.value || !descriptionStory.value) {
+    alert("Ecrire le titre et la description");
+    return;
+  }
+  let collaborateurObjet = {
+    id: storyIdCounter,
+    title: titreDeStory.value,
+    description: descriptionStory.value,
+    sprint: sprintStory.value,
+    assignee: assigneeStory.value,
+    status: "backlog",
+  };
+  storyIdCounter++;
+
+  titreDeStory.value = "";
+  descriptionStory.value = "";
+  userStories.push(collaborateurObjet);
+  renderSprintBacklog();
 }
 
 /**
@@ -113,8 +111,69 @@ function addUserStory() {
  * - Injecter tout le HTML généré dans le conteneur
  */
 function renderSprintBacklog() {
+  const backlogSprint = document.getElementById("sprintBacklog");
+  // console.log(userStories);
+    backlogSprint.innerHTML = "";
+  for (let i = 1; i <=3; i++) {
+     const sprintStory = userStories.filter(function (element) {
+        return element.sprint == i && element.status == "backlog";
+    })
+   
+          let sprintContainer = document.createElement("div");
+       sprintContainer.className = "sprint-Container";
+        backlogSprint.appendChild(sprintContainer);
+
+        let sprintHeader = document.createElement("div");
+        sprintHeader.className = "sprint-Header";
+        sprintContainer.appendChild(sprintHeader);
+
+       let header = document.createElement("h3");
+       header.innerHTML = `Sprint ${i}`;
+        sprintHeader.appendChild(header);
+
+        let button = document.createElement("button");
+       button.className = "start-sprint-btn";
+       button.textContent = "Démarrer Sprint";
+        button.onclick = function () {
+           startSprint(i);
+     };
+         sprintHeader.appendChild(button);
+
+         let sprintStories = document.createElement("div");
+         sprintStories.className = "sprint-Stories";
+         sprintContainer.appendChild(sprintStories);
+
+        if (sprintStory.length === 0) {
+            let message = document.createElement("p");
+            message.innerHTML = "Acune story dans ce sprint ";
+            sprintStories.appendChild(message);
+        }else{
+            sprintStory.forEach(function (story) {
+
+
+        let storyItem = document.createElement("div");
+        storyItem.className = "story-item";
+        sprintStories.appendChild(storyItem);
+
+                   let strong = document.createElement("strong");
+                 strong.innerHTML = `${story.title}`;
+                storyItem.appendChild(strong);
+         
+        let p = document.createElement("p");
+        p.innerHTML = `${story.description}`;
+        storyItem.appendChild(p);
+        let small = document.createElement("small");
+        small.innerHTML = `Assigné à : ${story.assignee}`;
+        storyItem.appendChild(small);
+            })
+        }
+  }  
+    }
+
     
-}
+    
+    
+
 
 /**
  * Fonction appelée lors du clic sur "Démarrer Sprint"
@@ -127,7 +186,7 @@ function renderSprintBacklog() {
  * - Appeler renderSprintBacklog() et renderBoard() pour mettre à jour l'affichage
  */
 function startSprint(sprintNum) {
-    // À IMPLÉMENTER
+  // À IMPLÉMENTER
 }
 
 /**
@@ -143,7 +202,7 @@ function startSprint(sprintNum) {
  *   - Injecter le HTML dans le conteneur
  */
 function renderBoard() {
-    // À IMPLÉMENTER
+  // À IMPLÉMENTER
 }
 
 /**
@@ -153,7 +212,7 @@ function renderBoard() {
  * - Retourner le status suivant selon le status actuel
  */
 function getNextStatus(current) {
-    // À IMPLÉMENTER
+  // À IMPLÉMENTER
 }
 
 /**
@@ -163,7 +222,7 @@ function getNextStatus(current) {
  * - Retourner le status précédent selon le status actuel
  */
 function getPrevStatus(current) {
-    // À IMPLÉMENTER
+  // À IMPLÉMENTER
 }
 
 /**
@@ -174,7 +233,7 @@ function getPrevStatus(current) {
  * - Appeler renderBoard() pour actualiser l'affichage
  */
 function moveCard(id, newStatus) {
-    // À IMPLÉMENTER
+  // À IMPLÉMENTER
 }
 
 /**
@@ -184,7 +243,7 @@ function moveCard(id, newStatus) {
  * - Appeler renderBoard() pour actualiser l'affichage
  */
 function deleteCard(id) {
-    // À IMPLÉMENTER
+  // À IMPLÉMENTER
 }
 
 // Initialisation
