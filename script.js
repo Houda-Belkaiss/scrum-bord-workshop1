@@ -113,67 +113,60 @@ function addUserStory() {
 function renderSprintBacklog() {
   const backlogSprint = document.getElementById("sprintBacklog");
   // console.log(userStories);
-    backlogSprint.innerHTML = "";
-  for (let i = 1; i <=3; i++) {
-     const sprintStory = userStories.filter(function (element) {
-        return element.sprint == i && element.status == "backlog";
-    })
-   
-          let sprintContainer = document.createElement("div");
-       sprintContainer.className = "sprint-Container";
-        backlogSprint.appendChild(sprintContainer);
+  backlogSprint.innerHTML = "";
+  for (let i = 1; i <= 3; i++) {
+    const sprintStory = userStories.filter(function (element) {
+      return element.sprint == i && element.status == "backlog";
+    });
 
-        let sprintHeader = document.createElement("div");
-        sprintHeader.className = "sprint-Header";
-        sprintContainer.appendChild(sprintHeader);
+    let sprintContainer = document.createElement("div");
+    sprintContainer.className = "sprint-Container";
+    backlogSprint.appendChild(sprintContainer);
 
-       let header = document.createElement("h3");
-       header.innerHTML = `Sprint ${i}`;
-        sprintHeader.appendChild(header);
+    let sprintHeader = document.createElement("div");
+    sprintHeader.className = "sprint-Header";
+    sprintContainer.appendChild(sprintHeader);
 
-        let button = document.createElement("button");
-       button.className = "start-sprint-btn";
-       button.textContent = "Démarrer Sprint";
-        button.onclick = function () {
-           startSprint(i);
-     };
-         sprintHeader.appendChild(button);
+    let header = document.createElement("h3");
+    header.innerHTML = `Sprint ${i}`;
+    sprintHeader.appendChild(header);
 
-         let sprintStories = document.createElement("div");
-         sprintStories.className = "sprint-Stories";
-         sprintContainer.appendChild(sprintStories);
+    let button = document.createElement("button");
+    button.className = "start-sprint-btn";
+    button.textContent = "Démarrer Sprint";
+    button.onclick = function () {
+      startSprint(i);
+    };
+    sprintHeader.appendChild(button);
 
-        if (sprintStory.length === 0) {
-            let message = document.createElement("p");
-            message.innerHTML = "Acune story dans ce sprint ";
-            sprintStories.appendChild(message);
-        }else{
-            sprintStory.forEach(function (story) {
+    let sprintStories = document.createElement("div");
+    sprintStories.className = "sprint-Stories";
+    sprintContainer.appendChild(sprintStories);
 
-
+    if (sprintStory.length === 0) {
+      let message = document.createElement("p");
+      message.innerHTML = "Acune story dans ce sprint ";
+      sprintStories.appendChild(message);
+    } else {
+      sprintStory.forEach(function (story) {
         let storyItem = document.createElement("div");
         storyItem.className = "story-item";
         sprintStories.appendChild(storyItem);
 
-                   let strong = document.createElement("strong");
-                 strong.innerHTML = `${story.title}`;
-                storyItem.appendChild(strong);
-         
+        let strong = document.createElement("strong");
+        strong.innerHTML = `${story.title}`;
+        storyItem.appendChild(strong);
+
         let p = document.createElement("p");
         p.innerHTML = `${story.description}`;
         storyItem.appendChild(p);
         let small = document.createElement("small");
         small.innerHTML = `Assigné à : ${story.assignee}`;
         storyItem.appendChild(small);
-            })
-        }
-  }  
+      });
     }
-
-    
-    
-    
-
+  }
+}
 
 /**
  * Fonction appelée lors du clic sur "Démarrer Sprint"
@@ -186,22 +179,28 @@ function renderSprintBacklog() {
  * - Appeler renderSprintBacklog() et renderBoard() pour mettre à jour l'affichage
  */
 function startSprint(sprintNum) {
-    const story = userStories.filter(function (item) {
-        return item.status == 'backlog' && item.sprint == sprintNum;   
-    })
-   
-    const newUserStories = userStories.filter(function (item) {
-        return item.status != 'backlog' || item.sprint != sprintNum;   
-    })
-     userStories = newUserStories;
-      story.forEach(function (element) {
-        element.status = 'todo';
-        boardStories.push(element);
-        
-    })
-    renderSprintBacklog();
-    renderBoard();
-    }
+  const story = userStories.filter(function (item) {
+    return item.status == "backlog" && item.sprint == sprintNum;
+  });
+  // console.log(story);
+
+  const newUserStories = userStories.filter(function (item) {
+    return item.status != "backlog" || item.sprint != sprintNum;
+  });
+  // console.log(newUserStories);
+
+  userStories = newUserStories;
+  //console.log(userStories);
+
+  story.forEach(function (element) {
+    element.status = "todo";
+    boardStories.push(element);
+  });
+  //console.log(story);
+
+  renderSprintBacklog();
+  renderBoard();
+}
 
 /**
  * Fonction pour afficher toutes les cartes sur le SCRUM Board
@@ -216,7 +215,62 @@ function startSprint(sprintNum) {
  *   - Injecter le HTML dans le conteneur
  */
 function renderBoard() {
-  // À IMPLÉMENTER
+  const column = document.querySelectorAll(".column-content");
+
+  column.forEach(function (item) {
+    item.innerHTML = "";
+    const toDoLI = boardStories.filter(function (element) {
+      return element.status === item.id;
+    });
+    if (toDoLI.length == 0) {
+      let message = document.createElement("p");
+      message.innerHTML = "Aucune carte";
+      item.appendChild(message);
+    } else {
+      toDoLI.forEach(function (stor) {
+        let story = document.createElement("div");
+        story.className = "story";
+        item.appendChild(story);
+
+        let strong = document.createElement("strong");
+        strong.innerHTML = `${stor.title}`;
+        story.appendChild(strong);
+
+        let p = document.createElement("p");
+        p.innerHTML = `${stor.description}`;
+        story.appendChild(p);
+
+        let small = document.createElement("small");
+        small.innerHTML = `Assigné à : ${stor.assignee}`;
+        story.appendChild(small);
+
+        if (stor.status != "done") {
+          let button = document.createElement("button");
+          button.innerHTML = "Suivant";
+          story.appendChild(button);
+          button.onclick = function () {
+         let nextStatus = getNextStatus(stor.status);
+            moveCard(stor.id ,nextStatus);
+          };
+        }
+        if (stor.status != "todo") {
+          let button = document.createElement("button");
+          button.innerHTML = "Précédent";
+          story.appendChild(button);
+          button.onclick = function () { 
+         let prevStatus = getPrevStatus(stor.status);
+            moveCard(stor.id ,prevStatus);
+          };
+        }
+        let button = document.createElement("button");
+        button.innerHTML = "Supprimer";
+        story.appendChild(button);
+         button.onclick = function () {
+           deleteCard(stor.id) ;
+          };
+      });
+    }
+  });
 }
 
 /**
