@@ -280,7 +280,13 @@ function renderBoard() {
  * - Retourner le status suivant selon le status actuel
  */
 function getNextStatus(current) {
-  // À IMPLÉMENTER
+  const transitions = {
+    "todo" : "in-progress",
+    "in-progress": "testing",
+    "testing":"done"
+
+  }
+  return transitions[current]
 }
 
 /**
