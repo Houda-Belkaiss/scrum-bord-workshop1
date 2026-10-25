@@ -325,9 +325,13 @@ function moveCard(id, newStatus) {
  * - Appeler renderBoard() pour actualiser l'affichage
  */
 function deleteCard(id) {
-  
+  const newStories = boardStories.filter(function (element) {
+     return element.id !== id;
+  })
+  boardStories = newStories;
+  renderBoard();
 }
+ 
 
-// Initialisation
 renderSprintBacklog();
 renderBoard();
